@@ -1,19 +1,18 @@
-// // Esse reducer será responsável por tratar o todas as informações relacionadas as despesas
-// // Esse reducer será responsável por tratar as informações da pessoa usuária
-// import USER_LOGIN from '../actions';
+import { REQUEST_API } from '../actions';
 
-// const INITIAL_STATE = {
-//   user: {},
-// };
+const INITIAL_STATE = {
+  currencies: [],
+  isLoading: false,
+};
 
-// const userReducer = (state = INITIAL_STATE, action) => {
-//   switch (action.type) {
-//   case USER_LOGIN: {
-//     return { ...state, user: action.user };
-//   }
-//   default:
-//     return state;
-//   }
-// };
+const wallet = (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+  case REQUEST_API: {
+    return { ...state, isloading: true };
+  }
+  default:
+    return state;
+  }
+};
 
-// export default userReducer;
+export default wallet;
