@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
+import { fetchApi } from '../redux/actions';
+// import { fetchApi } from '../redux/actions';
 class WalletForm extends Component {
   state = {
     valueInput: '',
@@ -10,6 +12,17 @@ class WalletForm extends Component {
     tag: 'Alimentação',
   };
 
+  componentDidMount() {
+    const { fetchCoins } = this.props;
+    fetchCoins();
+  }
+
+  handleInput = ({ target }) => {
+    const { name, value } = target;
+    this.setState({ [name]: value,
+    });
+  };
+
   render() {
     const {
       valueInput,
@@ -17,8 +30,8 @@ class WalletForm extends Component {
       currencyInput,
       method,
       tag,
-    } = this.setState;
-
+    } = this.state;
+    const { coins } = this.props;
     return (
       <div>
         <label htmlFor="valueInput">
@@ -28,7 +41,8 @@ class WalletForm extends Component {
             name="valueInput"
             data-testid="value-input"
             value={ valueInput }
-            // {/* onChange={} */}
+            onChange={ this.handleInput }
+
           />
         </label>
         <label htmlFor="description">
@@ -38,7 +52,7 @@ class WalletForm extends Component {
             name="description"
             data-testid="description-input"
             value={ description }
-            // {/* onChange={} */}
+            onChange={ this.handleInput }
           />
         </label>
         <label htmlFor="currencyInput">
@@ -48,7 +62,11 @@ class WalletForm extends Component {
             data-testid="currency-input"
             id="currencyInput"
             value={ currencyInput }
-          />
+            onChange={ this.handleInput }
+          >
+            {coins.map((coin) => <option key={ coin }>{coin}</option>)}
+          </select>
+
         </label>
         <label htmlFor="method">
           Método de Pagamento
@@ -57,7 +75,7 @@ class WalletForm extends Component {
             id="method"
             data-testid="method-input"
             value={ method }
-            // {/* onChange={} */}
+            onChange={ this.handleInput }
           >
             <option>Dinheiro</option>
             <option>Cartão de crédito</option>
@@ -72,7 +90,7 @@ class WalletForm extends Component {
             data-testid="tag-input"
             id="tag"
             value={ tag }
-            // {/* onChange={} */}
+            onChange={ this.handleInput }
           >
             <option>Alimentação</option>
             <option>Lazer</option>
@@ -87,4 +105,17 @@ class WalletForm extends Component {
   }
 }
 
-export default connect()(WalletForm);
+const mapDispatchToProps = (dispatch) => ({
+  fetchCoins: (payload) => dispatch(fetchApi(payload)),
+});
+
+const mapStateToProps = ({ wallet }) => ({
+  coins: wallet.currencies,
+});
+
+WalletForm.propTypes = {
+  coins: PropTypes.arrayOf.isRequired,
+  fetchCoins: PropTypes.func.isRequired,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(WalletForm);
