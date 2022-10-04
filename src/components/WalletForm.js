@@ -1,3 +1,4 @@
+// requisito 7 feito com a ajuda da colega Valéria Menezes;
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
