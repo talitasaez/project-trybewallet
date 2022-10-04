@@ -1,4 +1,4 @@
-import { REQUEST_API, ADD_EXPENSES } from '../actions';
+import { REQUEST_API, ADD_EXPENSES, REMOVE_EXPENSES } from '../actions';
 
 const INITIAL_STATE = {
   currencies: [],
@@ -22,6 +22,8 @@ const wallet = (state = INITIAL_STATE, action) => {
         exchangeRates: action.payload.exchangeRates,
       }] };
 
+  case REMOVE_EXPENSES:
+    return { ...state, expenses: [...action.id] };
   default:
     return state;
   }
