@@ -1,20 +1,29 @@
 import React from 'react';
 import { screen, act } from '@testing-library/react';
-// import userEvent from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { renderWithRouterAndRedux } from './helpers/renderWith';
 
 describe('teste o app', () => {
   it('verifica se possui o texto email na tela inicial', () => {
-    renderWithRouterAndRedux(<App />);
+    const { history } = renderWithRouterAndRedux(<App />);
     const email = screen.getByText(/email/i);
+    const password = screen.getByText(/senha/i);
+    const buttonAdicionar = screen.getByRole('button', { name: /entrar/i });
     expect(email).toBeInTheDocument();
+    expect(password).toBeInTheDocument();
+    userEvent.type(email, 'tltsaez@gmail.com');
+    userEvent.type(password, '12345');
+    expect(buttonAdicionar).toBeDisabled();
+    userEvent.type(password, '123456');
+    expect(buttonAdicionar).not.toBeDisabled();
+    userEvent.click(buttonAdicionar);
+    expect(history.location.pathname).toBe('/carteira');
   });
 
-  it('verifica se possui o texto password na tela inicial', () => {
-    renderWithRouterAndRedux(<App />);
-    const password = screen.getByText(/senha/i);
-    expect(password).toBeInTheDocument();
+  it('testa a rota da pagina, deve ser uma url ', () => {
+    const { history } = renderWithRouterAndRedux(<App />);
+    expect(history.location.pathname).toBe('/');
   });
 
   it('testar email-input e passaword-input', () => {
@@ -39,10 +48,10 @@ describe('teste o app', () => {
     expect(emailCarteira).toBeInTheDocument();
   });
 
-  test('Teste se a aplicação tem o botao habilitado.', () => {
+  test('Teste se a aplicação se a descricao aparece renderizado na tela carteira.', () => {
     const { history } = renderWithRouterAndRedux(<App />);
     act(() => { history.push('/carteira'); });
-    const buttonAdicionar = screen.getByRole('button', { name: /adicionar despesa/i });
-    expect(buttonAdicionar).toBeInTheDocument();
+    const descricao = screen.getByRole('columnheader', { name: /descrição/i });
+    expect(descricao).toBeInTheDocument();
   });
 });
